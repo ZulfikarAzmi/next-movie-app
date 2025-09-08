@@ -14,8 +14,6 @@ export async function searchMovies(query: string) {
   return res.json();
 }
 
-const BASE_URL = process.env.TMDB_BASE_URL ?? "https://api.themoviedb.org/3";
-
 export async function getMovieDetails(id: string) {
   const res = await fetch(
     `https://api.themoviedb.org/3/movie/${id}?api_key=${process.env.TMDB_API_KEY}&language=en-US`
