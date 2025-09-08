@@ -1,4 +1,4 @@
-import { searchMovies } from "@/app/lib/tmdb";
+import { searchMovies, Movie } from "@/app/lib/tmdb";
 import Image from "next/image";
 import Link from "next/link";
 import SearchBar from "../SearchBar";
@@ -21,8 +21,8 @@ export default async function SearchPage({
       {query && results ? (
         <ul className="grid grid-cols-2 md:grid-cols-4 gap-6">
           {results.results
-            .filter((m: any) => m.poster_path && (m.vote_count ?? 0) > 0)
-            .map((movie: any) => (
+            .filter((m: Movie) => m.poster_path && (m.vote_count ?? 0) > 0)
+            .map((movie: Movie) => (
               <li
                 key={movie.id}
                 className="border rounded p-2 hover:shadow-lg transition"

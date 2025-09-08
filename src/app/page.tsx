@@ -2,6 +2,7 @@ import { getPopularMovies } from "@/app/lib/tmdb";
 import Image from "next/image";
 import SearchBar from "./SearchBar";
 import Link from "next/link";
+import { Movie } from "./lib/tmdb";
 
 export default async function Home() {
   const popular = await getPopularMovies();
@@ -15,9 +16,9 @@ export default async function Home() {
       <section className="mb-10">
         <h1 className="text-2xl font-bold mb-4">Popular Movies</h1>
         <ul className="grid grid-cols-2 md:grid-cols-4 gap-6">
-          {popular.results
-            .filter((m: any) => m.poster_path && m.vote_average > 0)
-            .map((movie: any) => (
+          {(popular.results as Movie[])
+            .filter((m) => m.poster_path && (m.vote_average ?? 0) > 0)
+            .map((movie) => (
               <li key={movie.id} className="border rounded p-2">
                 <Link href={`/movie/${movie.id}`}>
                   <div className="cursor-pointer">

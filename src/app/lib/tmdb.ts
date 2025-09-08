@@ -48,4 +48,13 @@ export async function getMovieRecommendations(id: string) {
   return res.json();
 }
 
+export interface Movie {
+  id: number;
+  title: string;
+  poster_path: string | null;
+  release_date?: string;
+  vote_average?: number;
+  vote_count?: number;
+}
+
 
