@@ -3,6 +3,12 @@ import {
   getMovieCredits,
   getMovieVideos,
   getMovieRecommendations,
+  Movie,
+  Cast,
+  Crew,
+  Video,
+  CreditsResponse,
+  MoviesResponse,
 } from "@/app/lib/tmdb";
 import Image from "next/image";
 import Link from "next/link";
@@ -12,16 +18,21 @@ export default async function MovieDetail({
 }: {
   params: { id: string };
 }) {
-  const movie = await getMovieDetails(params.id);
-  const credits = await getMovieCredits(params.id);
+  // Fetch data
+  const movie: Movie = await getMovieDetails(params.id);
+  const credits: CreditsResponse = await getMovieCredits(params.id);
   const videos = await getMovieVideos(params.id);
-  const recommendations = await getMovieRecommendations(params.id);
-
-  const cast = credits.cast.slice(0, 10);
-  const directors = credits.crew.filter((c: any) => c.job === "Director");
-  const trailer = videos.results.find(
-    (v: any) => v.type === "Trailer" && v.site === "YouTube"
+  const recommendations: MoviesResponse = await getMovieRecommendations(
+    params.id
   );
+
+  // Process data
+  const cast: Cast[] = credits.cast.slice(0, 10);
+  const directors: Crew[] = credits.crew.filter((c) => c.job === "Director");
+  const trailer = videos.results.find(
+  ({ type, site }: Video) => type === "Trailer" && site === "YouTube"
+);
+
 
   return (
     <main className="p-6">
@@ -39,8 +50,12 @@ export default async function MovieDetail({
 
         <div>
           <h1 className="text-4xl font-bold mb-2">{movie.title}</h1>
-          <p className="text-gray-600 mb-4 italic">{movie.tagline}</p>
-          <p className="mb-2 text-gray-700">Release Date: {movie.release_date}</p>
+          {movie.tagline && (
+            <p className="text-gray-600 mb-4 italic">{movie.tagline}</p>
+          )}
+          <p className="mb-2 text-gray-700">
+            Release Date: {movie.release_date}
+          </p>
           <p className="mb-2 text-gray-700">
             Rating: ⭐ {movie.vote_average?.toFixed(1)} ({movie.vote_count} votes)
           </p>
@@ -48,7 +63,7 @@ export default async function MovieDetail({
 
           <div className="mb-2">
             <strong>Directors: </strong>
-            {directors.map((d: any) => d.name).join(", ") || "N/A"}
+            {directors.map((d) => d.name).join(", ") || "N/A"}
           </div>
         </div>
       </div>
@@ -70,7 +85,7 @@ export default async function MovieDetail({
       {/* Top Cast */}
       <h2 className="text-2xl font-semibold mb-4">Top Cast</h2>
       <ul className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-8">
-        {cast.map((actor: any) => (
+        {cast.map((actor) => (
           <li key={actor.id} className="text-center">
             {actor.profile_path && (
               <Image
@@ -92,7 +107,7 @@ export default async function MovieDetail({
         <div>
           <h2 className="text-2xl font-semibold mb-4">Recommended Movies</h2>
           <ul className="grid grid-cols-2 md:grid-cols-5 gap-4">
-            {recommendations.results.slice(0, 10).map((rec: any) => (
+            {recommendations.results.slice(0, 10).map((rec) => (
               <li key={rec.id} className="text-center">
                 <Link href={`/movie/${rec.id}`}>
                   {rec.poster_path && (

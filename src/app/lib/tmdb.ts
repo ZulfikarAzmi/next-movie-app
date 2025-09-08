@@ -53,6 +53,44 @@ export interface Movie {
   release_date?: string;
   vote_average?: number;
   vote_count?: number;
+  tagline?: string;   // tambahin
+  overview?: string;  // tambahin
+  videos?: {
+    results: { key: string; site: string }[];
+  }; // buat video trailer
 }
 
+export interface Cast {
+  id: number;
+  name: string;
+  character: string;
+  profile_path: string | null;
+}
+
+export interface Crew {
+  id: number;
+  name: string;
+  job: string;
+}
+
+export interface Video {
+  id: string;
+  key: string;
+  name: string;
+  site: string;
+  type: string;
+}
+
+export interface CreditsResponse {
+  cast: Cast[];
+  crew: Crew[];
+}
+
+export interface VideosResponse {
+  results: Video[];
+}
+
+export interface MoviesResponse {
+  results: Movie[];
+}
 
